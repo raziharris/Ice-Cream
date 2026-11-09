@@ -1,21 +1,27 @@
-# Aiscrème storefront
+# Aiscrème
 
-A responsive Aiscrème storefront concept built with static HTML, CSS and JavaScript. The design uses the supplied Aiscrème logo, charcoal and warm white surfaces, Barlow headings with Georgia editorial accents, and locally stored imagery.
+A colourful, responsive website for Aiscrème ice cream catering. The original supplied logo is preserved. The visual system uses strawberry pink, mango yellow, pistachio green and deep berry text.
 
 ## Run locally
 
-Run `npm.cmd run dev` from this folder, then open http://localhost:3333. The server also accepts a `PORT` environment variable. Refresh an already open preview to load design changes.
+Run `npm.cmd run dev` and open http://127.0.0.1:3333.
 
-## Included
+## Live site
 
-- Desktop navigation and a mobile menu
-- Editorial hero, category collections, brand philosophy and celebration sections
-- Curated product grid and accessible category filters
-- Search, product preview and quantity selection
-- Persistent cart, quantity editing, removal and order summary
-- Responsive informational sections and footer
-- Keyboard-accessible dialogs, focus handling and reduced-motion support
+http://43.156.11.241/Icecream/
 
-This is a demonstration storefront, not the official Inside Scoop store. Real checkout, stock, authentication and email delivery are not connected. Newsletter submission saves only a demo preference locally. External links are explicitly directed to the original services. Prices and promotional claims are a snapshot of the reference, not a live inventory feed.
+Static content in `dist/` is served by the shared Tencent Lighthouse Nginx host from `/var/www/sites/Icecream`. Asset paths are relative to support this route.
 
-REA 6.8.0 was already installed and its Codex registration was verified with its dedicated Node 24.22.1 runtime. REA successfully captured the reference browser. Reference evidence ID: ev_3fda75fc3a94c821a473599aac33d24a17419e6b5fd006d7ebc06971366102e5.
+## Features
+
+- Wedding, birthday and corporate event sections
+- Original photographs from https://www.instagram.com/_aiscreme/
+- Gallery filters and accessible native dialog photo viewer
+- Event enquiry composer: copies a message for the visitor to send on Instagram, with a manual copy fallback on HTTP
+- Responsive navigation and reduced-motion support
+
+No booking is submitted by the site. Availability and packages are confirmed directly with Aiscrème.
+
+## Photo sources
+
+See `docs/photo-sources.json` for the original Instagram post links. Selected photos are stored locally so the site does not depend on expiring Instagram CDN URLs. Historical sample shop assets remain in the repository but are not used by this page.

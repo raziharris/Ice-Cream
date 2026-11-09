@@ -1,41 +1,74 @@
-const $=s=>document.querySelector(s);
-const assets='./assets/';
-const products=[
- {name:'Gulab Jamun Ice Cream Cake',price:128,type:'cakes',seasonal:true,image:'gulab-jamun-ice-cream-cake-9467412.jpg',alternate:'gulab-jamun-ice-cream-cake-2294391.jpg',description:'A festive ice cream cake to share. Explore the Gulab Jamun celebration cake from the Deepavali Delights collection.'},
- {name:'Pistachio Kulfi (473ml)',price:36.5,type:'pints',seasonal:true,image:'pistachio-kulfi-473ml-2040678.jpg',alternate:'pistachio-kulfi-473ml-4817092.jpg',description:'A scoop of festive happiness. Discover Pistachio Kulfi in a take-home 473ml pint.'},
- {name:'Masala Chai (473ml)',price:36.5,type:'pints',seasonal:true,image:'masala-chai-473ml-2412584.jpg',alternate:'masala-chai-473ml-2651180.jpg',description:'Your tea-time moment, by the scoop. Explore Masala Chai in a take-home 473ml pint.'},
- {name:'Mango Lassi (473ml)',price:36.5,type:'pints',seasonal:true,image:'mango-lassi-473ml-7068376.jpg',alternate:'mango-lassi-473ml-2470357.jpg',description:'Make room for a little mango happiness. Discover Mango Lassi in a take-home 473ml pint.'},
- {name:'Happy Hearts Ice Cream Cake',price:129,type:'cakes',image:'happy-hearts-ice-cream-cake-8209667.jpg',alternate:'happy-hearts-ice-cream-cake-7610840.jpg',description:'A little love, a lot of ice cream. Celebrate someone special with the Happy Hearts cake.'},
- {name:'Planet Ice Cream Cake',price:115,type:'cakes',image:'planet-ice-cream-cake-1029206.jpg',alternate:'planet-ice-cream-cake-1710975.jpg',description:'An out-of-this-world centrepiece for your next celebration.'},
- {name:'Rocher Ice Cream Cake',price:143,type:'cakes',image:'rocher-ice-cream-cake-273279.jpg',alternate:'rocher-ice-cream-cake-9885277.jpg',description:'Bring everyone together over a slice of Rocher ice cream cake.'},
- {name:'Little Daisy Ice Cream Cake',price:99,type:'cakes',image:'little-daisy-ice-cream-cake-803340.jpg',alternate:'little-daisy-ice-cream-cake-3998212.jpg',description:'Make their day a little brighter with the Little Daisy celebration cake.'},
- {name:'Valrhona Chocolate (473ml)',price:36.5,type:'pints',image:'valrhona-chocolate-473ml-204714.jpg',alternate:'valrhona-chocolate-473ml-772133.jpg',description:'One of the original Inside Scoop favourites. Discover Valrhona Chocolate in a 473ml pint.'},
- {name:'Rocher (473ml)',price:36.5,type:'pints',image:'rocher-473ml-908090.jpg',alternate:'rocher-473ml-861920.jpg',description:'Your favourite scoop, ready to take home. Explore the Rocher 473ml pint.'},
- {name:'Raspberry Sorbet (473ml)',price:36.5,type:'pints',image:'raspberry-sorbet-473ml-837203.jpg',alternate:'raspberry-sorbet-473ml-103919.jpg',description:'A bright little pick-me-up. Discover Raspberry Sorbet in a take-home 473ml pint.'},
- {name:'Matka Pot Set',price:50,type:'pints',seasonal:true,image:'matka-pot-set-7353509.jpg',description:'Discover the festive Matka Pot Set from the Deepavali Delights collection.'}
+const $ = selector => document.querySelector(selector);
+const moments = [
+  {image:'aiscreme-party-smiles.jpg',title:'A scoop between friends',type:'birthday',alt:'Friends enjoying Aiscrème ice cream at a birthday celebration',post:'DelvC2sD1Vy'},
+  {image:'aiscreme-wedding-guests.jpg',title:'Love, laughter & ice cream',type:'wedding',alt:'Wedding guests beside the Aiscrème ice cream cart',post:'DeGfDQmD96I'},
+  {image:'aiscreme-event-setup.jpg',title:'Our little corner, all set',type:'setup',alt:'The Aiscrème cart, ice cream cones and toppings at an outdoor event',post:'DeDawv-vnMq'},
+  {image:'aiscreme-happy-guest.jpg',title:'A sweet birthday moment',type:'birthday',alt:'A smiling birthday party guest holding her Aiscrème ice cream',post:'DelvC2sD1Vy'},
+  {image:'aiscreme-garden-party.jpg',title:'Garden party, extra sweet',type:'wedding',alt:'Two guests with their ice cream at an outdoor wedding',post:'DeGfDQmD96I'},
+  {image:'aiscreme-wedding-friends.jpg',title:'Good company by the cart',type:'wedding',alt:'A group of wedding guests gathering at the Aiscrème cart',post:'DeGfDQmD96I'}
 ];
-const money=n=>'RM'+n.toLocaleString('en-MY',{minimumFractionDigits:Number.isInteger(n)?0:2,maximumFractionDigits:2});
-let cart={};try{const saved=JSON.parse(localStorage.getItem('eskem-cart')||'{}');for(const [id,q] of Object.entries(saved)){if(products[id]&&Number.isInteger(q)&&q>0&&q<=99)cart[id]=q;}}catch{}
-let filter='all',expanded=false;
-const card=(p,id)=>`<article class="product"><button class="product-photo" data-product="${id}" aria-label="View ${p.name}"><span class="product-badge">${p.type==='cakes'?'TO CELEBRATE':'BY THE PINT'}</span><img src="${assets+p.image}" alt="${p.name}" loading="lazy" width="500" height="500">${p.alternate?`<img class="alternate" src="${assets+p.alternate}" alt="" loading="lazy" width="500" height="500">`:''}</button><p class="product-meta">${p.type==='cakes'?'CELEBRATION COLLECTION':'ICE CREAM · 473 ML'}</p><h3><button data-product="${id}">${p.name.replace(' (473ml)','')}</button></h3><div class="product-bottom"><p class="price">${money(p.price)}</p><button class="quick-add" data-add="${id}" aria-label="Add ${p.name} to bag">Add to bag <span aria-hidden="true">+</span></button></div></article>`;
-function renderProducts(){let list=products.map((p,id)=>({p,id})).filter(({p})=>filter==='all'||(filter==='seasonal'?p.seasonal:p.type===filter));if(!expanded)list=[8,9,6,7].map(id=>({p:products[id],id}));$('#products').innerHTML=list.map(({p,id})=>card(p,id)).join('');$('#filters').hidden=false;document.querySelectorAll('#filters button').forEach(b=>{b.classList.toggle('active',b.dataset.filter===filter);b.setAttribute('aria-pressed',String(b.dataset.filter===filter));});$('.shop-all').hidden=expanded;$('#product-count').textContent=list.length+' selections';$('#shop-title').innerHTML=expanded?({all:'Explore the <em>collection.</em>',pints:'Your everyday <em>indulgence.</em>',cakes:'A reason to <em>celebrate.</em>',seasonal:'Something a little <em>different.</em>'})[filter]:'A taste for the <em>exceptional.</em>';}
-function closeDialogs(){document.querySelectorAll('dialog[open]').forEach(d=>d.close());}
-function openDialog(id){closeDialogs();$('#'+id).showModal();if(id==='search'){search();$('#search-input').focus();}if(id==='cart')renderCart();}
-function persistCart(){try{localStorage.setItem('eskem-cart',JSON.stringify(cart));}catch{}renderCart();}
-function renderCart(){const entries=Object.entries(cart);const count=entries.reduce((n,[,q])=>n+q,0);const total=entries.reduce((n,[id,q])=>n+products[id].price*q,0);$('#cart-count').textContent=count;$('#cart-count').hidden=!count;$('#cart-total-items').textContent=count?`(${count})`:'';$('.cart-toggle').setAttribute('aria-label',`Open bag, ${count} items`);if(!count){$('#cart-content').innerHTML='<div class="cart-empty"><span style="font-size:55px">♧</span><h3>Make room for a little joy.</h3><p>Add your favourite ice cream or a celebration cake.</p><button class="pill dark" data-filter="all">Explore flavours</button></div>';return;}$('#cart-content').innerHTML=`<div class="shipping-note">${total>=180?'You have reached the free delivery minimum!':`You’re ${money(180-total)} away from free delivery.`}<div class="shipping-bar"><span style="width:${Math.min(100,total/180*100)}%"></span></div></div>${entries.map(([id,q])=>{const p=products[id];return `<div class="cart-line"><button data-product="${id}" aria-label="View ${p.name}"><img src="${assets+p.image}" alt="${p.name}"></button><div><h3>${p.name}</h3><p>${money(p.price*q)}</p><div class="quantity"><button data-change="${id}" data-delta="-1" aria-label="Decrease ${p.name}">−</button><span>${q}</span><button data-change="${id}" data-delta="1" aria-label="Increase ${p.name}" ${q>=99?'disabled':''}>+</button></div><button class="remove" data-remove="${id}" aria-label="Remove ${p.name}">Remove</button></div></div>`;}).join('')}<div class="cart-summary"><p><span>Subtotal</span><span id="cart-subtotal">${money(total)}</span></p><div class="cart-note">Delivery calculated at checkout.</div><button class="pill dark" data-info="checkout">Review order</button><div class="cart-note">Demo storefront · No payment is collected.</div></div>`;}
-function add(id,q=1){cart[id]=Math.min(99,(cart[id]||0)+q);persistCart();openDialog('cart');}
-function productDetail(id){const p=products[id];if(!p)return;$('#product-detail').innerHTML=`<img src="${assets+p.image}" alt="${p.name}"><div class="detail-copy"><p>${p.seasonal?'DEEPAVALI DELIGHTS':p.type==='cakes'?'SCOOPS OF CELEBRATION':'HAPPINESS BY THE PINT'}</p><h2 id="product-name">${p.name}</h2><p class="detail-price">${money(p.price)}</p><p>${p.description}</p><p class="cart-note">Product preview. Check the original shop for current ingredients, allergens and availability.</p><div class="quantity"><button id="detail-minus" aria-label="Decrease quantity">−</button><span id="detail-quantity">1</span><button id="detail-plus" aria-label="Increase quantity">+</button></div><button class="pill dark" id="detail-add">Add to cart · ${money(p.price)}</button></div>`;let q=1;const update=()=>{$('#detail-quantity').textContent=q;$('#detail-add').textContent='Add to cart · '+money(p.price*q);};$('#detail-minus').onclick=()=>{q=Math.max(1,q-1);update();};$('#detail-plus').onclick=()=>{q=Math.min(99,q+1);update();};$('#detail-add').onclick=()=>add(id,q);openDialog('product-dialog');}
-function search(){const query=$('#search-input').value.trim().toLowerCase();const hits=products.map((p,id)=>({p,id})).filter(({p})=>!query||p.name.toLowerCase().includes(query));$('#search-results').innerHTML=hits.length?hits.map(({p,id})=>`<button class="search-result" data-product="${id}"><img src="${assets+p.image}" alt=""><span>${p.name}</span><strong>${money(p.price)}</strong></button>`).join(''):'<p>No scoops found. Try “chocolate”, “cake” or “mango”.</p>';}
-const info={
-faq:['Good to know','<p><strong>Can I place an order?</strong><br>This is an Aiscrème storefront concept. Explore the collection, preview products, and try the shopping bag. Checkout and payments are not connected.</p><p><strong>What about ingredients and delivery?</strong><br>The displayed products are samples. Current ingredients, allergens, availability and delivery details must be confirmed before ordering.</p>'],
-contact:['Let’s stay in good company.','<p>Contact and ordering details for Aiscrème will appear here when available. This preview does not send enquiries or accept orders.</p>'],
-terms:['About this storefront','<p>This is a design concept for Aiscrème. Sample product information and product photographs are from Inside Scoop. Editorial imagery illustrates the brand direction. Prices and availability are not live. No orders or payments are processed.</p>'],
-privacy:['Your privacy','<p>The demo bag and newsletter interest are stored only in this browser. Your email address is not sent or saved. This preview does not collect payments or create customer accounts.</p>']
-};
-function showInfo(key){let value=info[key];if(key==='checkout'){const total=Object.entries(cart).reduce((sum,[id,q])=>sum+products[id].price*q,0);value=['Your order preview',`<p>${Object.entries(cart).map(([id,q])=>`${q} × ${products[id].name}`).join('<br>')}</p><p><strong>Total: ${money(total)}</strong></p><p>This is a demo order summary. No order has been placed and no payment has been taken.</p><button class="pill dark" data-open="cart">Back to cart</button>`];}if(!value)return;$('#info-title').textContent=value[0];$('#info-content').innerHTML=value[1];openDialog('info');}
-document.addEventListener('click',e=>{const b=e.target.closest('button,a');if(!b)return;if(b.matches('.close'))b.closest('dialog').close();if(b.dataset.open)openDialog(b.dataset.open);if(b.dataset.filter){filter=b.dataset.filter;expanded=true;closeDialogs();renderProducts();$('#shop').scrollIntoView({behavior:'smooth'});}if(b.dataset.product!==undefined)productDetail(Number(b.dataset.product));if(b.dataset.add!==undefined)add(Number(b.dataset.add));if(b.dataset.change!==undefined){const id=b.dataset.change;cart[id]=Math.min(99,(cart[id]||0)+Number(b.dataset.delta));if(cart[id]<=0)delete cart[id];persistCart();}if(b.dataset.remove!==undefined){delete cart[b.dataset.remove];persistCart();}if(b.dataset.info)showInfo(b.dataset.info);if(b.matches('.nav-link')){const parent=b.closest('.dropdown');const open=parent.classList.toggle('open');b.setAttribute('aria-expanded',String(open));}if(b.closest('#menu')&&b.tagName==='A')closeDialogs();});
-document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}}));
-document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.dropdown.open').forEach(d=>{d.classList.remove('open');d.querySelector('button').setAttribute('aria-expanded','false');});});
-$('#search-input').addEventListener('input',search);
-$('#newsletter-form').addEventListener('submit',e=>{e.preventDefault();try{localStorage.setItem('eskem-newsletter-demo','saved');}catch{}$('#newsletter-status').textContent='Thanks! Demo preference saved on this device. No email has been sent or subscribed.';$('#newsletter-form').reset();});
-renderProducts();renderCart();
+function renderMoments(filter = 'all') {
+  const selected = moments.map((photo,id) => ({...photo,id})).filter(photo => filter === 'all' || photo.type === filter);
+  $('#moments').innerHTML = selected.map(photo => `<button class="moment-card" data-photo="${photo.id}"><span class="moment-image"><img src="./assets/${photo.image}" alt="${photo.alt}" loading="lazy" width="1080" height="1440"></span><span class="moment-caption">${photo.title}<span aria-hidden="true">↗</span></span></button>`).join('');
+  document.querySelectorAll('#filters button').forEach(button => {
+    const active = button.dataset.filter === filter;
+    button.classList.toggle('active',active);
+    button.setAttribute('aria-pressed',String(active));
+  });
+  $('#photo-count').textContent = selected.length + ' happy moments';
+}
+function closeDialogs() { document.querySelectorAll('dialog[open]').forEach(dialog => dialog.close()); }
+function openDialog(id) { closeDialogs(); $('#' + id).showModal(); }
+document.addEventListener('click',event => {
+  const control = event.target.closest('button,a');
+  if (!control) return;
+  if (control.matches('.close')) control.closest('dialog').close();
+  if (control.dataset.open) openDialog(control.dataset.open);
+  if (control.dataset.filter) renderMoments(control.dataset.filter);
+  if (control.dataset.enquire) {
+    $('#occasion').value = control.dataset.enquire;
+    $('#enquiry-status').textContent = '';
+    $('#enquiry-message').hidden = true;
+    openDialog('enquiry');
+  }
+  if (control.dataset.photo !== undefined) {
+    const photo = moments[Number(control.dataset.photo)];
+    if (!photo) return;
+    $('#photo-title').textContent = photo.title;
+    $('#full-photo').src = './assets/' + photo.image;
+    $('#full-photo').alt = photo.alt;
+    $('#photo-source').href = 'https://www.instagram.com/p/' + photo.post + '/';
+    openDialog('photo-dialog');
+  }
+  if (control.closest('#menu') && control.tagName === 'A') closeDialogs();
+});
+document.querySelectorAll('dialog').forEach(dialog => dialog.addEventListener('click',event => {
+  if (event.target !== dialog) return;
+  const rect = dialog.getBoundingClientRect();
+  if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
+}));
+$('#enquiry-form').addEventListener('submit',async event => {
+  event.preventDefault();
+  const data = new FormData(event.target);
+  const date = data.get('date');
+  const dateLabel = date ? new Date(date + 'T12:00:00').toLocaleDateString('en-MY',{day:'numeric',month:'long',year:'numeric'}) : 'To be confirmed';
+  const message = [
+    'Hi Aiscrème! I’d like to ask about ice cream catering.',
+    'Occasion: ' + data.get('occasion'),
+    'Date: ' + dateLabel,
+    'Guests: ' + (data.get('guests') || 'To be confirmed'),
+    'Location: ' + (data.get('location') || 'To be confirmed'),
+    'Could you share your availability and package details?'
+  ].join('\n');
+  $('#enquiry-message').value = message;
+  $('#enquiry-message').hidden = false;
+  try {
+    await navigator.clipboard.writeText(message);
+    $('#enquiry-status').textContent = 'Copied! Open Instagram and paste your enquiry into a message.';
+  } catch {
+    $('#enquiry-status').textContent = 'Your enquiry is ready below. Select and copy it, then send it on Instagram.';
+    $('#enquiry-message').focus();
+    $('#enquiry-message').select();
+  }
+});
+renderMoments();
