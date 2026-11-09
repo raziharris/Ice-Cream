@@ -18,7 +18,16 @@ function renderMoments(filter = 'all') {
   $('#photo-count').textContent = selected.length + ' photos';
 }
 function closeDialogs() { document.querySelectorAll('dialog[open]').forEach(dialog => dialog.close()); }
-function openDialog(id) { closeDialogs(); $('#' + id).showModal(); }
+function openDialog(id) {
+  closeDialogs();
+  $('#' + id).showModal();
+  if (id === 'menu') $('.mobile-menu').setAttribute('aria-expanded', 'true');
+}
+$('#menu').addEventListener('close', () => $('.mobile-menu').setAttribute('aria-expanded', 'false'));
+const desktopNavigation = window.matchMedia('(min-width: 861px)');
+desktopNavigation.addEventListener('change', event => {
+  if (event.matches && $('#menu').open) $('#menu').close();
+});
 document.addEventListener('click',event => {
   const control = event.target.closest('button,a');
   if (!control) return;
