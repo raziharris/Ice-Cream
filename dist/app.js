@@ -1,11 +1,11 @@
 const $ = selector => document.querySelector(selector);
 const moments = [
-  {image:'aiscreme-party-smiles.jpg',title:'A scoop between friends',type:'birthday',alt:'Friends enjoying Aiscrème ice cream at a birthday celebration',post:'DelvC2sD1Vy'},
-  {image:'aiscreme-wedding-guests.jpg',title:'Love, laughter & ice cream',type:'wedding',alt:'Wedding guests beside the Aiscrème ice cream cart',post:'DeGfDQmD96I'},
-  {image:'aiscreme-event-setup.jpg',title:'Our little corner, all set',type:'setup',alt:'The Aiscrème cart, ice cream cones and toppings at an outdoor event',post:'DeDawv-vnMq'},
-  {image:'aiscreme-happy-guest.jpg',title:'A sweet birthday moment',type:'birthday',alt:'A smiling birthday party guest holding her Aiscrème ice cream',post:'DelvC2sD1Vy'},
-  {image:'aiscreme-garden-party.jpg',title:'Garden party, extra sweet',type:'wedding',alt:'Two guests with their ice cream at an outdoor wedding',post:'DeGfDQmD96I'},
-  {image:'aiscreme-wedding-friends.jpg',title:'Good company by the cart',type:'wedding',alt:'A group of wedding guests gathering at the Aiscrème cart',post:'DeGfDQmD96I'}
+  {image:'aiscreme-party-smiles.jpg',title:'Birthday party',type:'birthday',alt:'Friends enjoying Aiscrème ice cream at a birthday celebration',post:'DelvC2sD1Vy'},
+  {image:'aiscreme-wedding-guests.jpg',title:'Wedding',type:'wedding',alt:'Wedding guests beside the Aiscrème ice cream cart',post:'DeGfDQmD96I'},
+  {image:'aiscreme-event-setup.jpg',title:'Our setup',type:'setup',alt:'The Aiscrème cart, ice cream cones and toppings at an outdoor event',post:'DeDawv-vnMq'},
+  {image:'aiscreme-happy-guest.jpg',title:'Birthday party',type:'birthday',alt:'A smiling birthday party guest holding her Aiscrème ice cream',post:'DelvC2sD1Vy'},
+  {image:'aiscreme-garden-party.jpg',title:'Garden wedding',type:'wedding',alt:'Two guests with their ice cream at an outdoor wedding',post:'DeGfDQmD96I'},
+  {image:'aiscreme-wedding-friends.jpg',title:'Wedding guests',type:'wedding',alt:'A group of wedding guests gathering at the Aiscrème cart',post:'DeGfDQmD96I'}
 ];
 function renderMoments(filter = 'all') {
   const selected = moments.map((photo,id) => ({...photo,id})).filter(photo => filter === 'all' || photo.type === filter);
@@ -15,7 +15,7 @@ function renderMoments(filter = 'all') {
     button.classList.toggle('active',active);
     button.setAttribute('aria-pressed',String(active));
   });
-  $('#photo-count').textContent = selected.length + ' happy moments';
+  $('#photo-count').textContent = selected.length + ' photos';
 }
 function closeDialogs() { document.querySelectorAll('dialog[open]').forEach(dialog => dialog.close()); }
 function openDialog(id) { closeDialogs(); $('#' + id).showModal(); }
@@ -64,9 +64,9 @@ $('#enquiry-form').addEventListener('submit',async event => {
   $('#enquiry-message').hidden = false;
   try {
     await navigator.clipboard.writeText(message);
-    $('#enquiry-status').textContent = 'Copied! Open Instagram and paste your enquiry into a message.';
+    $('#enquiry-status').textContent = 'Copied. Paste it into an Instagram message.';
   } catch {
-    $('#enquiry-status').textContent = 'Your enquiry is ready below. Select and copy it, then send it on Instagram.';
+    $('#enquiry-status').textContent = 'Select and copy the message below, then open Instagram.';
     $('#enquiry-message').focus();
     $('#enquiry-message').select();
   }
