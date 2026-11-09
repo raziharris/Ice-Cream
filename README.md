@@ -1,16 +1,16 @@
-# Eskem ice cream storefront
+# Aiscrème storefront
 
-A responsive reconstruction of https://insidescoop.com.my/ as observed on 5 November 2026, built with static HTML, CSS and JavaScript. The local assets preserve the reference banner, branding, product photography and Barlow typography.
+A responsive Aiscrème storefront concept built with static HTML, CSS and JavaScript. The design uses the supplied Aiscrème logo, charcoal and warm white surfaces, Barlow headings with Georgia editorial accents, and locally stored imagery.
 
 ## Run locally
 
-Run `npm.cmd run dev` from this folder, then open http://127.0.0.1:4173.
+Run `npm.cmd run dev` from this folder, then open http://localhost:3333. The server also accepts a `PORT` environment variable. Refresh an already open preview to load design changes.
 
 ## Included
 
-- Desktop dropdowns and mobile navigation
-- Four responsive campaign banners with previous/next controls
-- Product carousel and category filtering
+- Desktop navigation and a mobile menu
+- Editorial hero, category collections, brand philosophy and celebration sections
+- Curated product grid and accessible category filters
 - Search, product preview and quantity selection
 - Persistent cart, quantity editing, removal and order summary
 - Responsive informational sections and footer
