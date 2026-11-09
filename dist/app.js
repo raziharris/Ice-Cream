@@ -7,8 +7,11 @@ const moments = [
   {image:'aiscreme-garden-party.jpg',title:'Garden wedding',type:'wedding',alt:'Two guests with their ice cream at an outdoor wedding',post:'DeGfDQmD96I'},
   {image:'aiscreme-wedding-friends.jpg',title:'Wedding guests',type:'wedding',alt:'A group of wedding guests gathering at the Aiscrème cart',post:'DeGfDQmD96I'}
 ];
+let currentPhoto = 0;
+let visiblePhotos = moments.map((_, id) => id);
 function renderMoments(filter = 'all') {
   const selected = moments.map((photo,id) => ({...photo,id})).filter(photo => filter === 'all' || photo.type === filter);
+  visiblePhotos = selected.map(photo => photo.id);
   $('#moments').innerHTML = selected.map(photo => `<button class="moment-card" data-photo="${photo.id}"><span class="moment-image"><img src="./assets/${photo.image}" alt="${photo.alt}" loading="lazy" width="1080" height="1440"></span><span class="moment-caption">${photo.title}<span aria-hidden="true">↗</span></span></button>`).join('');
   document.querySelectorAll('#filters button').forEach(button => {
     const active = button.dataset.filter === filter;
@@ -18,6 +21,22 @@ function renderMoments(filter = 'all') {
   $('#photo-count').textContent = selected.length + ' photos';
 }
 function closeDialogs() { document.querySelectorAll('dialog[open]').forEach(dialog => dialog.close()); }
+function showPhoto(id) {
+  const photo = moments[id];
+  if (!photo) return;
+  currentPhoto = id;
+  $('#photo-title').textContent = photo.title;
+  $('#full-photo').src = './assets/' + photo.image;
+  $('#full-photo').alt = photo.alt;
+  $('#photo-source').href = 'https://www.instagram.com/p/' + photo.post + '/';
+  $('#photo-position').textContent = (visiblePhotos.indexOf(id) + 1) + ' / ' + visiblePhotos.length;
+  document.querySelectorAll('[data-photo-step]').forEach(button => { button.disabled = visiblePhotos.length < 2; });
+  if (!$('#photo-dialog').open) openDialog('photo-dialog');
+}
+function stepPhoto(direction) {
+  const index = visiblePhotos.indexOf(currentPhoto);
+  showPhoto(visiblePhotos[(index + direction + visiblePhotos.length) % visiblePhotos.length]);
+}
 function openDialog(id) {
   closeDialogs();
   $('#' + id).showModal();
@@ -41,14 +60,9 @@ document.addEventListener('click',event => {
     openDialog('enquiry');
   }
   if (control.dataset.photo !== undefined) {
-    const photo = moments[Number(control.dataset.photo)];
-    if (!photo) return;
-    $('#photo-title').textContent = photo.title;
-    $('#full-photo').src = './assets/' + photo.image;
-    $('#full-photo').alt = photo.alt;
-    $('#photo-source').href = 'https://www.instagram.com/p/' + photo.post + '/';
-    openDialog('photo-dialog');
+    showPhoto(Number(control.dataset.photo));
   }
+  if (control.dataset.photoStep) stepPhoto(Number(control.dataset.photoStep));
   if (control.closest('#menu') && control.tagName === 'A') closeDialogs();
 });
 document.querySelectorAll('dialog').forEach(dialog => dialog.addEventListener('click',event => {
@@ -80,4 +94,21 @@ $('#enquiry-form').addEventListener('submit',async event => {
     $('#enquiry-message').select();
   }
 });
+document.addEventListener('keydown', event => {
+  if (!$('#photo-dialog').open) return;
+  if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+    event.preventDefault();
+    stepPhoto(event.key === 'ArrowLeft' ? -1 : 1);
+  }
+});
+const sectionObserver = new IntersectionObserver(entries => {
+  for (const entry of entries) {
+    if (!entry.isIntersecting) continue;
+    document.querySelectorAll('.nav-left a').forEach(link => {
+      if (link.hash === '#' + entry.target.id) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+  }
+}, {rootMargin: '-90px 0px -45% 0px', threshold: 0});
+['collection', 'shop', 'contact'].forEach(id => sectionObserver.observe($('#' + id)));
 renderMoments();
