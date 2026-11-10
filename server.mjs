@@ -12,7 +12,7 @@ const validDate=d=>typeof d==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(d)&&!isNaN(Da
 const status=d=>state.bookings.some(b=>b.date===d&&b.status==='confirmed')?'booked':state.dates[d]||'available';
 const fail=(code,message)=>{throw Object.assign(Error(message),{code});};
 async function mutate(fn){const task=queue.then(async()=>{const previous=structuredClone(state);try{const result=fn();await fs.writeFile(path.join(dataDir,'bookings.tmp'),JSON.stringify(state),{mode:0o600});await fs.rename(path.join(dataDir,'bookings.tmp'),path.join(dataDir,'bookings.json'));return result;}catch(e){state=previous;throw e;}});queue=task.catch(()=>{});return task;}
-const types={'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript','.jpeg':'image/jpeg','.jpg':'image/jpeg','.png':'image/png','.webp':'image/webp','.woff2':'font/woff2'};
+const types={'.svg':'image/svg+xml','.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript','.jpeg':'image/jpeg','.jpg':'image/jpeg','.png':'image/png','.webp':'image/webp','.woff2':'font/woff2'};
 http.createServer(async(req,res)=>{
  const send=(code,value)=>{res.writeHead(code,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify(value));};
  res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','same-origin');res.setHeader('X-Frame-Options','DENY');

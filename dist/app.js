@@ -12,7 +12,7 @@ let visiblePhotos = moments.map((_, id) => id);
 function renderMoments(filter = 'all') {
   const selected = moments.map((photo,id) => ({...photo,id})).filter(photo => filter === 'all' || photo.type === filter);
   visiblePhotos = selected.map(photo => photo.id);
-  $('#moments').innerHTML = selected.map(photo => `<button class="moment-card" data-photo="${photo.id}"><span class="moment-image"><img src="./assets/${photo.image}" alt="${photo.alt}" loading="lazy" width="1080" height="1440"></span><span class="moment-caption">${photo.title}<span aria-hidden="true">↗</span></span></button>`).join('');
+  $('#moments').innerHTML = selected.map(photo => `<button class="moment-card" data-photo="${photo.id}"><span class="moment-image"><img src="./assets/${photo.image}" alt="${photo.alt}" loading="lazy" width="1080" height="1440"></span><span class="moment-caption">${photo.title}<svg class="ui-illustration" aria-hidden="true"><use href="./assets/ui-icons.svg#zoom"/></svg></span></button>`).join('');
   document.querySelectorAll('#filters button').forEach(button => {
     const active = button.dataset.filter === filter;
     button.classList.toggle('active',active);
