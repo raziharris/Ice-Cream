@@ -39,9 +39,23 @@ function stepPhoto(direction) {
 }
 function openDialog(id) {
   closeDialogs();
+  syncDialogViewport();
   $('#' + id).showModal();
   if (id === 'menu') $('.mobile-menu').setAttribute('aria-expanded', 'true');
 }
+function syncDialogViewport() {
+  const viewport = window.visualViewport;
+  document.documentElement.style.setProperty('--dialog-height', (viewport?.height ?? window.innerHeight) + 'px');
+  document.documentElement.style.setProperty('--dialog-top', (viewport?.offsetTop ?? 0) + 'px');
+}
+let viewportFrame = 0;
+function scheduleDialogViewport() {
+  if (viewportFrame || !document.querySelector('dialog[open]')) return;
+  viewportFrame = requestAnimationFrame(() => { viewportFrame = 0; syncDialogViewport(); });
+}
+window.visualViewport?.addEventListener('resize', scheduleDialogViewport);
+window.visualViewport?.addEventListener('scroll', scheduleDialogViewport);
+window.addEventListener('resize', scheduleDialogViewport);
 $('#menu').addEventListener('close', () => $('.mobile-menu').setAttribute('aria-expanded', 'false'));
 const desktopNavigation = window.matchMedia('(min-width: 861px)');
 desktopNavigation.addEventListener('change', event => {
