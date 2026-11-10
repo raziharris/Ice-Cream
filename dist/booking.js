@@ -1,7 +1,7 @@
-const admin=location.pathname.includes('/admin');
-const apiBase=new URL(admin?'../api/':'./api/',location.href);
+async function initBooking(root,admin=false){
+const apiBase=new URL('./api/',location.href);
 let csrf='',availability={dates:{}},selected='',month=new Date(),requests=[];
-const q=s=>document.querySelector(s);
+const q=s=>(admin?root:document).querySelector(admin?s.replace(/#([\w-]+)/g,'#admin-$1'):s);
 const label=d=>new Date(d+'T12:00:00').toLocaleDateString('en-MY',{day:'numeric',month:'long',year:'numeric'});
 async function api(endpoint,method='GET',body){const response=await fetch(new URL(endpoint,apiBase),{method,headers:{'Content-Type':'application/json','X-CSRF-Token':csrf},...(body?{body:JSON.stringify(body)}:{})});const data=await response.json();if(!response.ok){if(admin&&response.status===401){q('#login').hidden=false;q('#dashboard').hidden=true;}throw Error(data.error||'Please try again.');}return data;}
 function message(text){q('#calendar-status').textContent=text;}
@@ -12,7 +12,7 @@ function render(){
  const first=availability.today?.slice(0,7),shown=`${year}-${String(m+1).padStart(2,'0')}`;q('[data-month="-1"]').disabled=!!first&&shown<=first;q('[data-month="1"]').disabled=new Date(year,m+1,1)>new Date(Date.now()+366*86400000);
 }
 async function refresh(){try{availability=await api('availability');if(selected&&!admin&&(availability.dates[selected]||'available')!=='available'){selected='';q('#selected-date').textContent='Choose another date';q('#date-action').disabled=true;message('Availability changed. Please choose another date.');}render();}catch(e){message('Calendar unavailable. Please refresh to try again.');}}
-document.querySelectorAll('[data-month]').forEach(button=>button.onclick=()=>{month=new Date(month.getFullYear(),month.getMonth()+Number(button.dataset.month),1);render();});
+root.querySelectorAll('[data-month]').forEach(button=>button.onclick=()=>{month=new Date(month.getFullYear(),month.getMonth()+Number(button.dataset.month),1);render();});
 if(!admin){
  q('#date-action').onclick=()=>{q('#enquiry-form').hidden=false;q('#enquiry-form [name=date]').value=selected;q('#enquiry-status').textContent='';openDialog('enquiry');};
  q('#enquiry-form').addEventListener('submit',async event=>{event.preventDefault();const button=event.target.querySelector('[type=submit]');button.disabled=true;try{const data=await api('bookings','POST',Object.fromEntries(new FormData(event.target)));q('#enquiry-status').textContent='Request received · '+data.id+'. We’ll contact you to confirm.';event.target.reset();event.target.hidden=true;selected='';q('#selected-date').textContent='Choose your date';q('#date-action').disabled=true;}catch(e){q('#enquiry-status').textContent=e.message;}finally{button.disabled=false;await refresh();}});
@@ -21,8 +21,17 @@ if(!admin){
  async function enter(){q('#login').hidden=true;q('#dashboard').hidden=false;await refresh();await loadRequests();}
  q('#login-form').onsubmit=async event=>{event.preventDefault();const button=q('#login-form button');button.disabled=true;try{csrf=(await api('login','POST',{password:q('#password').value})).csrf;q('#password').value='';await enter();}catch(e){q('#login-error').textContent=e.message;}finally{button.disabled=false;}};
  q('#logout').onclick=async()=>{try{await api('logout','POST',{});location.reload();}catch(e){message(e.message);}};
- q('#request-filter').onchange=loadRequests;setInterval(()=>{if(!document.hidden&&!q('#dashboard').hidden)loadRequests();},30000);
+ q('#request-filter').onchange=loadRequests;setInterval(()=>{if(!document.hidden&&root.open&&!q('#dashboard').hidden)loadRequests();},30000);
  q('#date-action').onclick=async()=>{const button=q('#date-action');button.disabled=true;try{await api('admin/availability','PUT',{date:selected,status:q('#date-status').value});await refresh();message('Availability saved. Customers can see it now.');}catch(e){message(e.message);}finally{button.disabled=false;}};
  try{csrf=(await api('session')).csrf;await enter();}catch{}
 }
-await refresh();setInterval(()=>{if(!document.hidden)refresh();},30000);window.addEventListener('focus',refresh);
+await refresh();setInterval(()=>{if(!document.hidden&&(!admin||root.open))refresh();},30000);window.addEventListener('focus',()=>{if(!admin||root.open)refresh();});
+if(admin)root.addEventListener('close',()=>window.dispatchEvent(new Event('focus')));
+}
+
+initBooking(document.querySelector('#main'));
+const studio=document.querySelector('#studio');
+let started=false;
+function startStudio(){if(!started){started=true;initBooking(studio,true);}}
+document.querySelector('[data-open="studio"]').addEventListener('click',startStudio);
+if(location.hash==='#studio'){openDialog('studio');startStudio();history.replaceState(null,'',location.pathname+location.search);}

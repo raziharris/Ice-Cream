@@ -2,7 +2,7 @@
 
 Public site: https://43-156-11-241.sslip.io/Icecream/
 
-Admin: https://43-156-11-241.sslip.io/Icecream/admin/
+Admin access: the discreet lock icon in the main website footer opens the password-protected booking studio without leaving the page. Existing `/admin/` bookmarks redirect to this integrated panel. The public calendar and management calendar have independent selections and controls.
 
 Customers select an available date and submit their name, phone, event, guest count and venue. Requests are pending until an administrator confirms them. Confirmation reserves the whole day. Pending requests do not reserve dates. The admin can block days or mark existing offline bookings, and confirm, decline or cancel requests. Contact customers directly; no automatic messages are sent.
 
