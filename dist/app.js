@@ -9,8 +9,16 @@ const moments = [
 ];
 let currentPhoto = 0;
 let visiblePhotos = moments.map((_, id) => id);
-function renderMoments(filter = 'all') {
-  const selected = moments.map((photo,id) => ({...photo,id})).filter(photo => filter === 'all' || photo.type === filter);
+let galleryFilter = 'all';
+let galleryExpanded = false;
+function renderMoments(filter = galleryFilter) {
+  if (filter !== galleryFilter) galleryExpanded = false;
+  galleryFilter = filter;
+  const matching = [0,1,2,4,3,5].map(id => ({...moments[id],id})).filter(photo => filter === 'all' || photo.type === filter);
+  const selected = galleryExpanded ? matching : matching.slice(0,4);
+  $('#view-more-photos').hidden = matching.length <= 4;
+  $('#view-more-photos').textContent = galleryExpanded ? 'Show fewer photos' : 'View more photos';
+  $('#view-more-photos').setAttribute('aria-expanded',String(galleryExpanded));
   visiblePhotos = selected.map(photo => photo.id);
   $('#moments').innerHTML = selected.map(photo => `<button class="moment-card" data-photo="${photo.id}"><span class="moment-image"><img src="./assets/${photo.image}" alt="${photo.alt}" loading="lazy" width="1080" height="1440"></span><span class="moment-caption">${photo.title}<svg class="ui-illustration" aria-hidden="true"><use href="./assets/ui-icons.svg#zoom"/></svg></span></button>`).join('');
   document.querySelectorAll('#filters button').forEach(button => {
@@ -18,7 +26,7 @@ function renderMoments(filter = 'all') {
     button.classList.toggle('active',active);
     button.setAttribute('aria-pressed',String(active));
   });
-  $('#photo-count').textContent = selected.length + ' photos';
+  $('#photo-count').textContent = selected.length === matching.length ? selected.length + ' photos' : selected.length + ' of ' + matching.length + ' photos';
 }
 function closeDialogs() { document.querySelectorAll('dialog[open]').forEach(dialog => dialog.close()); }
 function showPhoto(id) {
@@ -100,5 +108,15 @@ const sectionObserver = new IntersectionObserver(entries => {
     });
   }
 }, {rootMargin: '-90px 0px -45% 0px', threshold: 0});
-['collection', 'shop', 'contact'].forEach(id => sectionObserver.observe($('#' + id)));
+['collection', 'shop', 'booking'].forEach(id => sectionObserver.observe($('#' + id)));
 renderMoments();
+
+$('#view-more-photos').addEventListener('click',()=>{galleryExpanded=!galleryExpanded;renderMoments();});
+const bookingBar=$('.mobile-booking-bar');
+let calendarVisible=false;
+function syncBookingBar(){bookingBar.hidden=calendarVisible||!!document.querySelector('dialog[open]');}
+const bookingObserver=new IntersectionObserver(entries=>{calendarVisible=entries[0].isIntersecting;syncBookingBar();},{rootMargin:'-80px 0px 0px 0px',threshold:0});
+bookingObserver.observe($('#booking'));
+const dialogObserver=new MutationObserver(syncBookingBar);
+document.querySelectorAll('dialog').forEach(dialog=>dialogObserver.observe(dialog,{attributes:true,attributeFilter:['open']}));
+syncBookingBar();
