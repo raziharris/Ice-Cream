@@ -64,3 +64,21 @@ dialog{border:1px solid #d7cdd0;border-radius:16px;box-shadow:0 24px 90px #24151
  .footer-top{gap:20px}.footer-bottom{line-height:1.6}
 }
 @media(max-width:359px){.hero-actions{grid-template-columns:minmax(0,1fr)}.hero-actions .text-link{justify-self:start}.hero h1{font-size:40px}.category-caption h3{font-size:22px}.category-card{grid-template-columns:88px minmax(0,1fr)}}
+
+/* Compact event album: quiet framing, smaller photographs, room to breathe. */
+.shop{background:var(--paper);padding-block:42px 52px;border-top:1px solid var(--line)}
+.shop>.section-heading,.shop>.collection-toolbar,.shop>.moments-grid{max-width:900px;margin-left:auto;margin-right:auto}
+.shop .section-heading h2{font-size:clamp(28px,3vw,38px)}
+.shop .collection-toolbar{margin-top:18px;margin-bottom:22px;padding-bottom:12px;gap:12px;align-items:center;flex-direction:row}
+.shop .filters{display:flex;flex-wrap:nowrap;gap:4px;padding:0;border:0;background:none;border-radius:0;width:auto;max-width:100%;overflow-x:auto}
+.shop .filters button{flex:0 0 auto;min-height:44px;padding:8px 14px;font-size:12px;border-radius:24px;box-shadow:none}
+.shop .filters button.active{background:#e9dfe2;color:var(--berry)}
+.shop .moments-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 18px}
+.shop .moment-image{aspect-ratio:4/3;border:0;border-radius:6px;box-shadow:none}
+.shop .moment-image img{object-position:center 38%}
+.shop .moment-card[data-photo="2"] img{object-position:center 80%}
+.shop .moment-caption{min-height:38px;padding:7px 0 0;font-size:12px;line-height:1.4;font-weight:500}
+.shop .moment-caption>span{font-size:16px;color:var(--muted)}
+.reviews-section{padding-block:48px 56px;background:#f3eeea}.reviews-heading,.reviews-grid,.reviews-footnote{max-width:900px;margin-inline:auto}.reviews-heading{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:26px}.reviews-heading h2{font-size:clamp(28px,3vw,38px);margin-top:8px}.reviews-heading>.text-link{font-size:12px;flex-shrink:0}.reviews-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px}.review-card{margin:0;padding:24px 0;border-top:1px solid #d9cdd0}.review-stars{font-size:13px;letter-spacing:3px;color:var(--berry)}.review-card blockquote{margin:16px 0 22px;font-size:clamp(18px,2vw,23px);line-height:1.55;color:var(--ink);max-width:30ch}.review-card figcaption{display:flex;flex-direction:column;gap:2px}.review-card figcaption>span{font-size:13px;font-weight:700}.review-card small,.reviews-footnote>small{font-size:11px;color:var(--muted)}.reviews-footnote{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-top:12px}.reviews-footnote .text-link{font-size:12px}
+@media(max-width:760px){.reviews-section{padding-block:34px 38px}.reviews-heading{align-items:start;flex-direction:column;gap:12px;margin-bottom:18px}.reviews-grid{grid-template-columns:minmax(0,1fr);gap:4px}.review-card{padding-block:20px}.review-card blockquote{font-size:20px;margin-block:12px 16px;max-width:none}.reviews-footnote{flex-direction:column;align-items:start;gap:14px}}
+@media(max-width:760px){.shop{padding-block:32px 38px}.shop .moments-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 12px}.shop .moment-image{aspect-ratio:1}.shop .section-heading>.text-link{font-size:12px}.shop .collection-toolbar{align-items:flex-start;flex-direction:column;gap:4px}.shop .filters{width:100%}.shop .filters button{padding-inline:12px}.shop #photo-count{font-size:11px}.shop .moment-caption{font-size:12px;min-height:36px}}
