@@ -47,8 +47,8 @@ sudo nginx -t
 sudo systemctl reload nginx
 sleep 2
 curl -fsS https://43-156-11-241.sslip.io/Icecream/api/availability
-curl -fsS https://43-156-11-241.sslip.io/Icecream/admin/ | grep -q 'Booking studio'
-curl -fsSL http://43.156.11.241/Icecream/ | grep -q 'aiscreme-booking-7'
+curl -fsS https://43-156-11-241.sslip.io/Icecream/admin/ | grep 'Booking studio' >/dev/null
+curl -fsSL http://43.156.11.241/Icecream/ | grep 'aiscreme-booking-7' >/dev/null
 check_routes
 trap - EXIT
 echo "DEPLOY_OK BACKUP=$BACKUP"
