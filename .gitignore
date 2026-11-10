@@ -1,3 +1,5 @@
 node_modules/
 .openai/local/
 *.log
+
+.local/

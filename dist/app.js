@@ -70,8 +70,8 @@ document.addEventListener('click',event => {
   if (control.dataset.enquire) {
     $('#occasion').value = control.dataset.enquire;
     $('#enquiry-status').textContent = '';
-    $('#enquiry-message').hidden = true;
-    openDialog('enquiry');
+    closeDialogs();
+    $('#booking').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
   }
   if (control.dataset.photo !== undefined) {
     showPhoto(Number(control.dataset.photo));
@@ -84,30 +84,6 @@ document.querySelectorAll('dialog').forEach(dialog => dialog.addEventListener('c
   const rect = dialog.getBoundingClientRect();
   if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
 }));
-$('#enquiry-form').addEventListener('submit',async event => {
-  event.preventDefault();
-  const data = new FormData(event.target);
-  const date = data.get('date');
-  const dateLabel = date ? new Date(date + 'T12:00:00').toLocaleDateString('en-MY',{day:'numeric',month:'long',year:'numeric'}) : 'To be confirmed';
-  const message = [
-    'Hi Aiscrème! I’d like to ask about ice cream catering.',
-    'Occasion: ' + data.get('occasion'),
-    'Date: ' + dateLabel,
-    'Guests: ' + (data.get('guests') || 'To be confirmed'),
-    'Location: ' + (data.get('location') || 'To be confirmed'),
-    'Could you share your availability and package details?'
-  ].join('\n');
-  $('#enquiry-message').value = message;
-  $('#enquiry-message').hidden = false;
-  try {
-    await navigator.clipboard.writeText(message);
-    $('#enquiry-status').textContent = 'Copied. Paste it into an Instagram message.';
-  } catch {
-    $('#enquiry-status').textContent = 'Select and copy the message below, then open Instagram.';
-    $('#enquiry-message').focus();
-    $('#enquiry-message').select();
-  }
-});
 document.addEventListener('keydown', event => {
   if (!$('#photo-dialog').open) return;
   if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
