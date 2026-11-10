@@ -66,6 +66,11 @@ dialog{border:1px solid #d7cdd0;border-radius:16px;box-shadow:0 24px 90px #24151
 @media(max-width:359px){.hero-actions{grid-template-columns:minmax(0,1fr)}.hero-actions .text-link{justify-self:start}.hero h1{font-size:40px}.category-caption h3{font-size:22px}.category-card{grid-template-columns:88px minmax(0,1fr)}}
 
 /* Compact event album: quiet framing, smaller photographs, room to breathe. */
+.category-caption .scoop-badge{display:inline-flex;align-items:center;justify-content:center;flex:0 0 42px;width:42px;height:46px;border:0;border-radius:46% 46% 42% 42%;background:#f5eee8;color:var(--berry);transform:rotate(8deg);transition:transform .25s,background .25s}.scoop-badge svg{display:block;width:30px;height:30px}.category-pints .scoop-badge{background:#edf0e7}.category-seasonal .scoop-badge{background:#f6efdf}
+@media(hover:hover){.category-card:hover .scoop-badge{transform:rotate(-8deg) translateY(-2px);background:#ecd4da}}
+@media(max-width:860px){.category-caption .scoop-badge{flex-basis:32px;width:32px;height:36px}.scoop-badge svg{width:25px;height:25px}}
+@media(max-width:480px){.category-caption .scoop-badge{flex-basis:27px;width:27px;height:31px}.scoop-badge svg{width:23px;height:23px}.category-caption{gap:8px}}
+@media(prefers-reduced-motion:reduce){.category-caption .scoop-badge{transition:none}.category-card:hover .scoop-badge{transform:rotate(8deg)}}
 .shop{background:var(--paper);padding-block:42px 52px;border-top:1px solid var(--line)}
 .shop>.section-heading,.shop>.collection-toolbar,.shop>.moments-grid{max-width:900px;margin-left:auto;margin-right:auto}
 .shop .section-heading h2{font-size:clamp(28px,3vw,38px)}
